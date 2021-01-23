@@ -1,0 +1,42 @@
+create database project;
+
+use project;
+
+create table products(
+s_no int NOT NULL,
+name varchar(20) NOT NULL,
+model_no varchar(20) PRIMARY KEY,
+price int NOT NULL);
+
+create table invoice(
+invoice_no int PRIMARY KEY,
+product1 varchar(20) NOT NULL,
+product2 varchar(20) DEFAULT('00000000000000000000'),
+product3 varchar(20) DEFAULT('00000000000000000000'),
+bill_amt int NOT NULL,
+DOP date,
+FOREIGN KEY(product1) REFERENCES products(model_no),
+FOREIGN KEY(product2) REFERENCES products(model_no),
+FOREIGN KEY(product3) REFERENCES products(model_no));
+
+create table customer(
+customer_ID varchar(6) PRIMARY KEY,
+name varchar(20) NOT NULL,
+mobile_num varchar(10) NOT NULL,
+invoice_no int NOT NULL,
+FOREIGN KEY(invoice_no) REFERENCES invoice(invoice_no));
+
+create table warranty(
+product_name varchar(20) NOT NULL,
+model_no varchar(20) PRIMARY KEY,
+start_date date DEFAULT(sysdate()),
+end_date date DEFAULT(DATE_ADD(start_date,INTERVAL 2 YEAR)),
+FOREIGN KEY(model_no) REFERENCES products(model_no),
+CONSTRAINT CHK_DATE CHECK(end_date>=DATE_ADD(start_date,INTERVAL 2 YEAR)));
+
+create table offers(
+off_code varchar(4) PRIMARY KEY,
+Discount_per int DEFAULT(0),
+model_no varchar(20) NOT NULL,
+p_name varchar(20) NOT NULL,
+FOREIGN KEY(model_no) REFERENCES products(model_no));
